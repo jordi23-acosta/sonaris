@@ -1,0 +1,44 @@
+name: sonaris_flutter
+description: "App para practicar acordes de guitarra con detección MLP"
+publish_to: 'none'
+version: 1.0.0+2
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  http: ^1.1.0
+  record: ^5.0.4
+  path_provider: ^2.1.1
+  provider: ^6.1.1
+  audioplayers: ^5.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  remove_alpha_ios: true
+  background_color: "#000000"
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "assets/logo.png"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/fondo.png
+    - assets/A-07-LAZARUS.wav
+    - assets/Am-08-LAZARUS.wav
+    - assets/C-05-AT2020.wav
+    - assets/D-01-LAZARUS.wav
+    - assets/F-07-LAZARUS.wav
+    - assets/Bm7-01-AT2020.wav
