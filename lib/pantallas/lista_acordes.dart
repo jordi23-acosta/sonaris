@@ -10,6 +10,7 @@ class PantallaListaAcordes extends StatelessWidget {
   final bool verificando;
   final void Function(String acorde) alSeleccionar;
   final VoidCallback alVerificarConexion;
+  final VoidCallback alAbrirApi;
 
   const PantallaListaAcordes({
     super.key,
@@ -17,6 +18,7 @@ class PantallaListaAcordes extends StatelessWidget {
     required this.verificando,
     required this.alSeleccionar,
     required this.alVerificarConexion,
+    required this.alAbrirApi,
   });
 
   @override
@@ -37,7 +39,19 @@ class PantallaListaAcordes extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            _PuntoCon(online: online, verificando: verificando, alTocar: alVerificarConexion),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: alAbrirApi,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.settings_rounded, color: medio, size: 20),
+              ),
+            ),
+            const SizedBox(width: 4),
+            _PuntoCon(
+                online: online,
+                verificando: verificando,
+                alTocar: alVerificarConexion),
           ]),
         ),
         const SizedBox(height: 4),
@@ -97,7 +111,8 @@ class _TarjetaAcorde extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 Text(
                   acorde,
@@ -118,14 +133,20 @@ class _TarjetaAcorde extends StatelessWidget {
               // Notas
               Wrap(
                 spacing: 5,
-                children: (notasAcorde[acorde] ?? []).map((n) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white.withOpacity(0.1)),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(n, style: const TextStyle(fontSize: 11, color: blanco)),
-                )).toList(),
+                children: (notasAcorde[acorde] ?? [])
+                    .map((n) => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.white.withOpacity(0.1)),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(n,
+                              style:
+                                  const TextStyle(fontSize: 11, color: blanco)),
+                        ))
+                    .toList(),
               ),
               const SizedBox(height: 8),
               Text(
@@ -158,7 +179,11 @@ class _PuntoCon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = verificando ? ambar : online ? verde : rojo;
+    final color = verificando
+        ? ambar
+        : online
+            ? verde
+            : rojo;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: alTocar,

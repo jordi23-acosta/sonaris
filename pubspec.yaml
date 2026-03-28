@@ -36,6 +36,7 @@ flutter:
   assets:
     - assets/logo.png
     - assets/fondo.png
+    - assets/imagenFondo2.png
     - assets/A-07-LAZARUS.wav
     - assets/Am-08-LAZARUS.wav
     - assets/C-05-AT2020.wav

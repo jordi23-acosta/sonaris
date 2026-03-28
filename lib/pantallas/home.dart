@@ -255,6 +255,7 @@ class _EstadoHome extends State<PantallaHome> with TickerProviderStateMixin {
           verificando: _verificando,
           alSeleccionar: _seleccionarAcorde,
           alVerificarConexion: _verificarServidor,
+          alAbrirApi: () => _irA(3),
         );
       case 2:
         return _construirPractica();
@@ -451,7 +452,6 @@ class _EstadoHome extends State<PantallaHome> with TickerProviderStateMixin {
               ),
             ),
           ),
-          Expanded(child: _itemNav(3, Icons.monitor_heart_rounded, 'API')),
           Expanded(child: _itemNav(4, Icons.quiz_rounded, 'Quiz')),
         ]),
       ),
