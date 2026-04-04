@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../constantes/colores.dart';
 import '../constantes/acordes.dart';
-import '../widgets/diagrama_acorde.dart';
+import 'ajustes.dart';
 
-/// Pantalla con la lista de los 6 acordes disponibles
 class PantallaListaAcordes extends StatelessWidget {
   final bool online;
   final bool verificando;
@@ -21,31 +20,61 @@ class PantallaListaAcordes extends StatelessWidget {
     required this.alAbrirApi,
   });
 
+  static const _niveles = [
+    _DatosNivel(
+      id: 'básico',
+      titulo: 'Básico',
+      descripcion: 'Domina tus primeros 3 acordes',
+      acordes: ['A', 'Am', 'D'],
+      color: Color(0xFF00E676),
+      icono: Icons.stairs_rounded,
+      desbloqueado: true,
+    ),
+    _DatosNivel(
+      id: 'intermedio',
+      titulo: 'Intermedio',
+      descripcion: 'Mantén el ritmo fluyendo',
+      acordes: ['C'],
+      color: Color(0xFF64B5F6),
+      icono: Icons.speed_rounded,
+      desbloqueado: false,
+    ),
+    _DatosNivel(
+      id: 'difícil',
+      titulo: 'Difícil',
+      descripcion: 'Conviértete en una leyenda',
+      acordes: ['F', 'Bm7'],
+      color: Color(0xFFFFD54F),
+      icono: Icons.emoji_events_rounded,
+      desbloqueado: false,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // Encabezado
+        // Header
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           child: Row(children: [
-            const Text(
-              'Acordes',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w200,
-                color: blanco,
-                letterSpacing: 0.5,
-              ),
-            ),
+            const Text('Tu camino',
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w200,
+                    color: blanco,
+                    letterSpacing: 0.5)),
             const Spacer(),
             GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: alAbrirApi,
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          PantallaAjustes(alAbrirApiMonitor: alAbrirApi))),
               child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.settings_rounded, color: medio, size: 20),
-              ),
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.settings_rounded, color: medio, size: 20)),
             ),
             const SizedBox(width: 4),
             _PuntoCon(
@@ -55,27 +84,21 @@ class PantallaListaAcordes extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            '${acordes.length} acordes · modelo MLP',
-            style: const TextStyle(fontSize: 11, color: medio),
-          ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: Text('3 niveles · 6 acordes · modelo MLP',
+              style: TextStyle(fontSize: 11, color: medio)),
         ),
-        const SizedBox(height: 16),
-        // Lista
+        const SizedBox(height: 20),
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
             physics: const BouncingScrollPhysics(),
-            itemCount: acordes.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 10),
-            itemBuilder: (_, i) => _TarjetaAcorde(
-              acorde: acordes[i],
-              alTocar: () {
-                HapticFeedback.selectionClick();
-                alSeleccionar(acordes[i]);
-              },
+            itemCount: _niveles.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (_, i) => _TarjetaNivel(
+              datos: _niveles[i],
+              alSeleccionar: alSeleccionar,
             ),
           ),
         ),
@@ -84,88 +107,153 @@ class PantallaListaAcordes extends StatelessWidget {
   }
 }
 
-class _TarjetaAcorde extends StatelessWidget {
-  final String acorde;
-  final VoidCallback alTocar;
+// ── Datos de nivel ────────────────────────────────────────
 
-  const _TarjetaAcorde({required this.acorde, required this.alTocar});
+class _DatosNivel {
+  final String id;
+  final String titulo;
+  final String descripcion;
+  final List<String> acordes;
+  final Color color;
+  final IconData icono;
+  final bool desbloqueado;
+
+  const _DatosNivel({
+    required this.id,
+    required this.titulo,
+    required this.descripcion,
+    required this.acordes,
+    required this.color,
+    required this.icono,
+    required this.desbloqueado,
+  });
+}
+
+// ── Tarjeta de nivel ──────────────────────────────────────
+
+class _TarjetaNivel extends StatelessWidget {
+  final _DatosNivel datos;
+  final void Function(String) alSeleccionar;
+
+  const _TarjetaNivel({required this.datos, required this.alSeleccionar});
 
   @override
   Widget build(BuildContext context) {
+    final bloqueado = !datos.desbloqueado;
+
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: alTocar,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: tarjeta,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
-        ),
-        child: Row(children: [
-          // Diagrama pequeño
-          SizedBox(
-            width: 68,
-            height: 100,
-            child: DiagramaAcordeWidget(acorde: acorde, alto: 100),
+      onTap: bloqueado ? null : () => _abrirNivel(context),
+      child: AnimatedOpacity(
+        opacity: bloqueado ? 0.5 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: tarjeta,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: datos.desbloqueado
+                  ? datos.color.withValues(alpha: 0.2)
+                  : Colors.white.withValues(alpha: 0.05),
+            ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Text(
-                  acorde,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w200,
-                    color: blanco,
-                    height: 1,
-                  ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              // Ícono circular
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: datos.color.withValues(alpha: 0.12),
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  nombreAcorde[acorde] ?? '',
-                  style: const TextStyle(fontSize: 11, color: medio),
-                ),
-              ]),
-              const SizedBox(height: 8),
-              // Notas
+                child: Icon(datos.icono, color: datos.color, size: 24),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Text(datos.titulo,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: blanco)),
+                    const SizedBox(height: 3),
+                    Text(datos.descripcion,
+                        style: const TextStyle(fontSize: 12, color: medio)),
+                  ])),
+              // Candado o badge de acordes
+              bloqueado
+                  ? const Icon(Icons.lock_rounded, color: tenue, size: 20)
+                  : Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: datos.color.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text('${datos.acordes.length} acordes',
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: datos.color,
+                              fontWeight: FontWeight.w600)),
+                    ),
+            ]),
+            if (datos.desbloqueado) ...[
+              const SizedBox(height: 16),
+              // Chips de acordes
               Wrap(
-                spacing: 5,
-                children: (notasAcorde[acorde] ?? [])
-                    .map((n) => Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.white.withOpacity(0.1)),
-                            borderRadius: BorderRadius.circular(6),
+                spacing: 8,
+                runSpacing: 8,
+                children: datos.acordes
+                    .map((a) => GestureDetector(
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            alSeleccionar(a);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: datos.color.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color: datos.color.withValues(alpha: 0.25)),
+                            ),
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(a,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: datos.color)),
+                                  Text(nombreAcorde[a] ?? '',
+                                      style: const TextStyle(
+                                          fontSize: 9, color: medio)),
+                                ]),
                           ),
-                          child: Text(n,
-                              style:
-                                  const TextStyle(fontSize: 11, color: blanco)),
                         ))
                     .toList(),
               ),
-              const SizedBox(height: 8),
-              Text(
-                descripcionAcorde[acorde] ?? '',
-                style: const TextStyle(fontSize: 11, color: medio, height: 1.4),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ]),
-          ),
-          const SizedBox(width: 6),
-          const Icon(Icons.arrow_forward_ios_rounded, color: tenue, size: 12),
-        ]),
+            ],
+          ]),
+        ),
       ),
     );
   }
+
+  void _abrirNivel(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    // Abre la práctica con el primer acorde del nivel
+    alSeleccionar(datos.acordes.first);
+  }
 }
 
-/// Punto de estado de conexión reutilizable
+// ── Punto de conexión ─────────────────────────────────────
+
 class _PuntoCon extends StatelessWidget {
   final bool online;
   final bool verificando;
@@ -194,7 +282,9 @@ class _PuntoCon extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: color,
-          boxShadow: [BoxShadow(color: color.withOpacity(0.6), blurRadius: 6)],
+          boxShadow: [
+            BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 6)
+          ],
         ),
       ),
     );

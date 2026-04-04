@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../constantes/colores.dart';
+import '../services/sesion_service.dart';
 
 class PantallaSplash extends StatelessWidget {
   final VoidCallback alComenzar;
@@ -8,30 +10,32 @@ class PantallaSplash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final nombre = context.watch<SesionService>().nombre ?? 'músico';
+    final firstName = nombre.trim().split(' ').first;
+
     return Stack(fit: StackFit.expand, children: [
       Image.asset('assets/fondo.png', fit: BoxFit.cover),
-      // Gradiente oscuro de abajo
       Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withOpacity(0.15),
-              Colors.black.withOpacity(0.45),
-              Colors.black.withOpacity(0.85),
-              Colors.black,
+              Color(0x26000000),
+              Color(0x73000000),
+              Color(0xD9000000),
+              Color(0xFF000000),
             ],
-            stops: const [0.0, 0.3, 0.65, 1.0],
+            stops: [0.0, 0.3, 0.65, 1.0],
           ),
         ),
       ),
       SafeArea(
         child: Column(children: [
           const Spacer(flex: 3),
-          const Text(
-            'Hola, músico.',
-            style: TextStyle(
+          Text(
+            'Hola, $firstName.',
+            style: const TextStyle(
               fontSize: 38,
               fontWeight: FontWeight.w200,
               color: blanco,
@@ -39,12 +43,12 @@ class PantallaSplash extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Toca. Aprende. Mejora.',
+          const Text(
+            'L I S T O  P A R A  T O C A R',
             style: TextStyle(
-              fontSize: 12,
-              color: blanco.withOpacity(0.4),
-              letterSpacing: 2.5,
+              fontSize: 11,
+              color: verde,
+              letterSpacing: 3,
             ),
           ),
           const Spacer(flex: 4),
@@ -55,7 +59,7 @@ class PantallaSplash extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 17),
               decoration: BoxDecoration(
-                color: blanco,
+                color: verde,
                 borderRadius: BorderRadius.circular(32),
               ),
               child: const Text(

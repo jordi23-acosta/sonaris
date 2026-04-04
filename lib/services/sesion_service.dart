@@ -55,4 +55,9 @@ class SesionService extends ChangeNotifier {
     _email = null;
     notifyListeners();
   }
+
+  void actualizarNombre(String nombre) {
+    _nombre = nombre;
+    notifyListeners();
+  }
 }

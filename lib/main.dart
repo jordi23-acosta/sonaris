@@ -5,6 +5,7 @@ import 'pantallas/bienvenida.dart';
 import 'services/api_service.dart';
 import 'services/turso_service.dart';
 import 'services/sesion_service.dart';
+import 'services/perfil_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ class SonarisApp extends StatelessWidget {
         Provider(create: (_) => ApiService()),
         Provider(create: (_) => turso),
         ChangeNotifierProvider(create: (_) => SesionService(turso)),
+        ChangeNotifierProvider(create: (_) => PerfilService()),
       ],
       child: MaterialApp(
         title: 'Sonaris',

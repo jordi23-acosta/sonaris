@@ -14,6 +14,7 @@ dependencies:
   record: ^6.2.0
   path_provider: ^2.1.1
   provider: ^6.1.1
+  image_picker: ^1.1.2
   audioplayers: ^5.2.1
 
 dev_dependencies:
@@ -37,6 +38,10 @@ flutter:
     - assets/logo.png
     - assets/fondo.png
     - assets/imagenFondo2.png
+    - assets/avatares/avatar1.png
+    - assets/avatares/avatar2.png
+    - assets/avatares/avatar3.png
+    - assets/avatares/avatar4.png
     - assets/A-07-LAZARUS.wav
     - assets/Am-08-LAZARUS.wav
     - assets/C-05-AT2020.wav

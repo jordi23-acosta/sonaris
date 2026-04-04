@@ -43,6 +43,42 @@ class _EstadoBienvenida extends State<PantallaBienvenida> {
             ),
           ],
         ),
+        // Título fijo encima del PageView
+        const Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(top: 48),
+              child: Column(children: [
+                Text(
+                  'S O N A R I S',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: blanco,
+                    letterSpacing: 8,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'GUITAR',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: verde,
+                    letterSpacing: 6,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ),
         // Indicadores y botones fijos abajo
         Positioned(
           left: 0,
@@ -126,27 +162,9 @@ class _PaginaBienvenida extends StatelessWidget {
       SafeArea(
         child: Column(children: [
           const SizedBox(height: 48),
-          const Text(
-            'S O N A R I S',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              color: blanco,
-              letterSpacing: 8,
-              decoration: TextDecoration.none,
-            ),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'GUITAR',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: verde,
-              letterSpacing: 6,
-              decoration: TextDecoration.none,
-            ),
-          ),
+          const SizedBox(height: 48),
+          // Espacio para el título fijo que está encima
+          const SizedBox(height: 60),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.fromLTRB(32, 0, 32, 120),

@@ -130,6 +130,30 @@ class TursoService {
     return _parseRows(results.first);
   }
 
+  Future<void> actualizarNombre(int id, String nombre) async {
+    await _execute([
+      {
+        'sql': 'UPDATE usuarios SET nombre = ? WHERE id = ?',
+        'args': [
+          {'type': 'text', 'value': nombre},
+          {'type': 'integer', 'value': id.toString()},
+        ],
+      },
+    ]);
+  }
+
+  Future<void> actualizarPassword(int id, String password) async {
+    await _execute([
+      {
+        'sql': 'UPDATE usuarios SET password = ? WHERE id = ?',
+        'args': [
+          {'type': 'text', 'value': password},
+          {'type': 'integer', 'value': id.toString()},
+        ],
+      },
+    ]);
+  }
+
   // ── Intentos ──────────────────────────────────────────────
 
   Future<void> registrarIntento({
