@@ -24,7 +24,7 @@ jobs:
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release --no-codesign
+        run: flutter build apk --release
 
       - name: Upload APK to release
         uses: softprops/action-gh-release@v1
