@@ -80,7 +80,7 @@ class _EstadoLogin extends State<PantallaLogin> {
                       fontWeight: FontWeight.w700,
                       color: blanco)),
               const SizedBox(height: 40),
-              _Label('Correo electrónico'),
+              const _Label('Correo electrónico'),
               const SizedBox(height: 8),
               _Campo(
                 controller: _emailCtrl,
@@ -88,7 +88,7 @@ class _EstadoLogin extends State<PantallaLogin> {
                 teclado: TextInputType.emailAddress,
               ),
               const SizedBox(height: 20),
-              _Label('Contraseña'),
+              const _Label('Contraseña'),
               const SizedBox(height: 8),
               _Campo(
                 controller: _passCtrl,
@@ -105,10 +105,10 @@ class _EstadoLogin extends State<PantallaLogin> {
                 ),
               ),
               const SizedBox(height: 12),
-              Align(
+              const Align(
                 alignment: Alignment.centerRight,
                 child: Text('¿Olvidaste tu contraseña?',
-                    style: const TextStyle(fontSize: 13, color: verde)),
+                    style: TextStyle(fontSize: 13, color: blanco)),
               ),
               if (_error != null) ...[
                 const SizedBox(height: 16),
@@ -132,7 +132,7 @@ class _EstadoLogin extends State<PantallaLogin> {
                           builder: (_) => const PantallaRegistro())),
                   child: const Text('Regístrate',
                       style: TextStyle(
-                          color: verde,
+                          color: blanco,
                           fontSize: 14,
                           fontWeight: FontWeight.w600)),
                 ),

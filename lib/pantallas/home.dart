@@ -42,7 +42,7 @@ class _EstadoHome extends State<PantallaHome> with TickerProviderStateMixin {
   bool _verificando = false;
 
   // API Monitor
-  List<Map<String, dynamic>> _historialPings = [];
+  final List<Map<String, dynamic>> _historialPings = [];
   Timer? _timerPing;
 
   late AnimationController _navCtrl;
@@ -111,11 +111,12 @@ class _EstadoHome extends State<PantallaHome> with TickerProviderStateMixin {
   Future<void> _verificarServidor() async {
     setState(() => _verificando = true);
     final ok = await context.read<ApiService>().checkHealth();
-    if (mounted)
+    if (mounted) {
       setState(() {
         _online = ok;
         _verificando = false;
       });
+    }
   }
 
   // ── Monitor de API ────────────────────────────────────────
@@ -339,7 +340,7 @@ class _EstadoHome extends State<PantallaHome> with TickerProviderStateMixin {
               _procesando ? 'Analizando...' : 'ESCUCHANDO...',
               style: TextStyle(
                 fontSize: 11,
-                color: _procesando ? ambar : verde,
+                color: blanco,
                 letterSpacing: 2.5,
                 fontWeight: FontWeight.w300,
               ),
