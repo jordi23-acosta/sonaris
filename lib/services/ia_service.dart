@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class IaService {
-  static const String _apiKey = 'GROQ_KEY';
+  // TODO: Reemplaza esto con tu API key real de Groq
+  // Obtén tu clave en: https://console.groq.com/keys
+  static const String _apiKey =
+      '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';
   static const String _url = 'https://api.groq.com/openai/v1/chat/completions';
 
   static const String _sistema = '''
@@ -25,6 +28,11 @@ Responde siempre en español, de forma concisa y amigable. Máximo 3 párrafos p
 
   Future<String> enviarMensaje(
       List<Map<String, String>> historial, String mensaje) async {
+    if (_apiKey == 'gsk_YOUR_API_KEY_HERE') {
+      throw Exception(
+          'API Key no configurada. Por favor, reemplaza "gsk_YOUR_API_KEY_HERE" con tu clave real de Groq en ia_service.dart');
+    }
+
     final messages = [
       {'role': 'system', 'content': _sistema},
       ...historial.map((m) => {'role': m['role']!, 'content': m['text']!}),
@@ -47,8 +55,9 @@ Responde siempre en español, de forma concisa y amigable. Máximo 3 párrafos p
         )
         .timeout(const Duration(seconds: 15));
 
-    if (res.statusCode != 200)
+    if (res.statusCode != 200) {
       throw Exception('Error ${res.statusCode}: ${res.body}');
+    }
     final data = jsonDecode(res.body);
     return data['choices'][0]['message']['content'] as String;
   }
