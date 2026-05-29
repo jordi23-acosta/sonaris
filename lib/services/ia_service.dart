@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class IaService {
-  static const String _apiKey =
-      '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';
+  // Pasar con: flutter run --dart-define=GROQ_API_KEY=tu_key
+  static const String _apiKey = String.fromEnvironment('GROQ_API_KEY');
   static const String _url = 'https://api.groq.com/openai/v1/chat/completions';
 
   static const String _sistema = '''
